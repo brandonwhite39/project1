@@ -7,4 +7,7 @@
 {% block body %}
     <h1>Welcome!!</h1>
 
+    <form action="{{ url_for('logout') }}" method="post">
+        <button>Logout</button>
+    </form>
 {% endblock %}

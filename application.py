@@ -42,5 +42,7 @@ def login():
 def home():
     return render_template("home.html")
 
-
+@app.route("/logout", methods=["POST"])
+def logout():
+    return render_template("logout.html")
 
