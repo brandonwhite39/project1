@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Hello, Welcome to the home page!
+{% endblock %}
+
+{% block body %}
+    <a href="{{ url_for('register') }}">Register</a>
+{% endblock %}
