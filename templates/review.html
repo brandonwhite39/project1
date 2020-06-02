@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Review
+{% endblock %}
+
+{% block body %}
+    {% for titles in title %}
+        <h1>Leave a Review for {{titles.title}}:</h1>
+    {% endfor %}
+    <form action="{{ url_for('success', isbn=isbn)}}" method="post">
+
+        <label for="rating">Rating</label><br>
+        <input type="radio" id="1" name="rating" value="1">
+        <label for="1">1 star</label><br>
+        <input type="radio" id="2" name="rating" value="2">
+        <label for="2">2 stars</label><br>
+        <input type="radio" id="3" name="rating" value="3">
+        <label for="3">3 stars</label><br>
+        <input type="radio" id="4" name="rating" value="4">
+        <label for="4">4 stars</label><br>
+        <input type="radio" id="5" name="rating" value="5">
+        <label for="5">5 stars</label><br><br>
+        
+
+        <label for="review">Review:</label>
+        <input type="text" id="reviewcontent" name="reviewcontent"><br>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

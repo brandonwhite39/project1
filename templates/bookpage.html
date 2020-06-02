@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{isbn}}</h1>
+    <h1>isbn: {{isbn}}</h1>
+    {% for titles in title %}
+        <h1>title: {{titles.title}}</h1>
+        <h1>author: {{titles.author}}</h1>
+        <h1>publication year: {{titles.year}}</h1>
+    {% endfor %}
+    <h1>Reviews</h1>
+    <form action="{{ url_for('review', isbn=isbn)}}">
+        <button>Leave a Review</button>
+    </form>
     
 {% endblock %}

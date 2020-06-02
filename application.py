@@ -61,10 +61,25 @@ def search():
 
 @app.route("/search/<isbn>") #add back post method for accessing
 def bookpage(isbn):
-    book = request.form.get("results")
-    return render_template("bookpage.html", isbn=isbn)
+    title = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn})
+    return render_template("bookpage.html", isbn=isbn, title=title)
 
-@app.route("/logout", methods=["POST"])
+@app.route("/search/<isbn>/review")
+def review(isbn):
+    title = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn})
+    #need to show the reviews that have been made for book already on webpage
+    return render_template("review.html", isbn=isbn, title=title)
+
+@app.route("/search/<isbn>/review/success", methods=["POST"])
+def success(isbn):
+    review = request.form.get("reviewcontent")
+    rating = request.form.get("rating")
+    #using isbn forsure, need to check if reviewcontent is empty and/or rating is empty
+    #should include some sort of message saying if stored and what has been stored.
+    
+    return render_template("successreview.html", isbn=isbn, review=review, rating=rating)
+
+@app.route("/logout")
 def logout():
     return render_template("logout.html")
 
