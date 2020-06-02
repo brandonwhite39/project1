@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Search
+{% endblock %}
+
+{% block body %}
+    <h1>Matches found!</h1>
+    <table>
+        <tr>
+            <th>isbn</th>
+            <th>title</th>
+            <th>author</th>
+            <th>year</th>
+        </tr>
+        {% for results in result %}
+        <tr>
+            <td><a href="{{ url_for('bookpage', isbn=results.isbn) }}">{{ results.isbn }}</a></td>
+            <td>{{ results.title }}</td>
+            <td>{{ results.author }}</td>
+            <td>{{ results.year }}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+{% endblock %}

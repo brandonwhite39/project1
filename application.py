@@ -7,11 +7,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 import requests
 
-
-
 app = Flask(__name__)
 
-app.config['DATABASE_URL']='postgres://jygfjdwhtrewcg:55eb38717969d43f3a4f3a452753e57ac586409b72f7e9df58d79f963db1e466@ec2-3-91-112-166.compute-1.amazonaws.com:5432/dcb1fa3mhsek6f'
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -33,7 +30,7 @@ res = requests.get("https://www.goodreads.com/book/review_counts.json", params={
 def index():
     test = db.execute("SELECT * FROM books").fetchone()
     work = test['isbn']
-    return render_template("homepage.html", work=work)
+    return render_template("homepage.html", work=work, res=res.json())
 
 
 @app.route("/register")
@@ -51,6 +48,21 @@ def login():
 @app.route("/home", methods=["POST"])
 def home():
     return render_template("home.html")
+
+@app.route("/search", methods=["POST"])
+def search():
+    search = request.form.get("search")
+    #check if inputted characters give back a result
+    if db.execute("SELECT * FROM books WHERE isbn LIKE :search OR title LIKE :search OR author LIKE :search", {"search": '%{}%'.format(search)}).rowcount == 0:
+        return render_template("error.html", message="No valid entries.")
+    else:
+        result = db.execute("SELECT * FROM books WHERE isbn LIKE :search OR title LIKE :search OR author LIKE :search", {"search": '%{}%'.format(search)}).fetchall()
+        return render_template("search.html", result=result)
+
+@app.route("/search/<isbn>") #add back post method for accessing
+def bookpage(isbn):
+    book = request.form.get("results")
+    return render_template("bookpage.html", isbn=isbn)
 
 @app.route("/logout", methods=["POST"])
 def logout():
