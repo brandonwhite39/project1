@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+    <h1>current user: {{currentUser}}</h1>
     {% for titles in title %}
         <h1>Leave a Review for {{titles.title}}:</h1>
     {% endfor %}

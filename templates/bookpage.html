@@ -11,9 +11,12 @@
         <h1>author: {{titles.author}}</h1>
         <h1>publication year: {{titles.year}}</h1>
     {% endfor %}
-    <h1>Reviews</h1>
+    
     <form action="{{ url_for('review', isbn=isbn)}}">
         <button>Leave a Review</button>
     </form>
-    
+    <h1>Review Left on Webpage:</h1>
+    {% for review in reviews %}
+        <ul>Comment: {{review.comments}} Rating (stars): {{review.rating}}</ul>
+    {% endfor %}
 {% endblock %}
