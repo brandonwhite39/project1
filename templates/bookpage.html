@@ -8,18 +8,19 @@
     <form action="{{ url_for('mainpage')}}" method="post">
         <button type="submit">Return to Homepage</button>
     </form>
-    <h1>Goodreads Number of Ratings: {{res.books[0].work_ratings_count}}</h1>
-    <h1>Goodreads Average Score out of 5: {{res.books[0].average_rating}}</h1>
+    <ul>
     {% for titles in title %}
-        <h1>title: {{titles.title}}</h1>
-        <h1>author: {{titles.author}}</h1>
-        <h1>publication year: {{titles.year}}</h1>
+        <li><h3>title: {{titles.title}}</h3></li>
+        <li><h3>author: {{titles.author}}</h3></li>
+        <li><h3>publication year: {{titles.year}}</h3></li>
     {% endfor %}
-    
+    <li><h3>Goodreads Number of Ratings: {{res.books[0].work_ratings_count}}</h3></li>
+    <li><h3>Goodreads Average Score out of 5: {{res.books[0].average_rating}}</h3></li>
+    </ul>
     <form action="{{ url_for('review', isbn=isbn)}}">
         <button>Leave a Review</button>
     </form>
-    <h1>Review Left on Webpage:</h1>
+    <h2>Review Left on Webpage:</h2>
     {% for review in reviews %}
         <ul>Comment: {{review.comments}} Rating (stars): {{review.rating}}</ul>
     {% endfor %}

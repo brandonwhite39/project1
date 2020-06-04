@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>userid: {{rowcount}}</h1>
-    <h1>Your Review has Successfully been Created.{{isbn}}</h1>
-    <h1>Review: {{review}}</h1>
-    <h1>Rating: {{rating}}</h1>
+    <h1>Your Review has Successfully been Created.</h1>
+    <ul>
+        <li><h3>Review: {{review}}</h3></li>
+        <li><h3>Rating: {{rating}}</h3></li>
+    </ul>
     <form action="{{ url_for('mainpage') }}" method="post">
         <button type="submit">Return to Homepage</button>
     </form>
