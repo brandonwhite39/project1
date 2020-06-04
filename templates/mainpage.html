@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block body %}
+    <h1>Search for a book</h1>
+    <form action="{{ url_for('search') }}" method="post">
+        <input type="text" id="search" name="search" placeholder="Title, ISBN, Author Name"><br>
+        <button type="submit">Submit</button>
+    </form>
+    <form action="{{ url_for('logout') }}" method="post">
+        <br><button>Logout</button>
+    </form>
+{% endblock %}

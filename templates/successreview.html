@@ -9,4 +9,7 @@
     <h1>Your Review has Successfully been Created.{{isbn}}</h1>
     <h1>Review: {{review}}</h1>
     <h1>Rating: {{rating}}</h1>
+    <form action="{{ url_for('mainpage') }}" method="post">
+        <button type="submit">Return to Homepage</button>
+    </form>
 {% endblock %}

@@ -10,8 +10,7 @@ CREATE TABLE review(
     isbn VARCHAR REFERENCES books(isbn),
     rating FLOAT,
     comments VARCHAR,
-    id SERIAL REFERENCES users(id),
-    PRIMARY KEY (id)
+    id SERIAL REFERENCES users(id)
 );
 
 

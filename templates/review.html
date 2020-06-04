@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    <h1>current user: {{currentUser}}</h1>
+    <form action="{{ url_for('mainpage')}}" method="post">
+        <button type="submit">Return to Homepage</button>
+    </form>
     {% for titles in title %}
         <h1>Leave a Review for {{titles.title}}:</h1>
     {% endfor %}

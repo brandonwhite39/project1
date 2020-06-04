@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>isbn: {{isbn}}</h1>
+    <form action="{{ url_for('mainpage')}}" method="post">
+        <button type="submit">Return to Homepage</button>
+    </form>
+    <h1>Goodreads Number of Ratings: {{res.books[0].work_ratings_count}}</h1>
+    <h1>Goodreads Average Score out of 5: {{res.books[0].average_rating}}</h1>
     {% for titles in title %}
         <h1>title: {{titles.title}}</h1>
         <h1>author: {{titles.author}}</h1>

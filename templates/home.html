@@ -6,12 +6,11 @@
 
 {% block body %}
 
-    <h1>id; {{uid}}</h1>
-    <h1>Search for a book</h1>
-    <form action="{{ url_for('search') }}" method="post">
-        <input type="text" id="search" name="search" placeholder="Title, ISBN, Author Name"><br>
-        <button type="submit">Submit</button>
+    <h1>Welcome to your accout, {{username}}!</h1>
+    <form action="{{ url_for('mainpage')}}" method="post">
+        <button type="submit">Search for a book</button>
     </form>
+    
     <form action="{{ url_for('logout') }}" method="post">
         <br><button>Logout</button>
     </form>

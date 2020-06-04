@@ -1,10 +1,9 @@
 import os
 
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
 
 import requests
 
@@ -24,9 +23,6 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
-res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "wJMCIDlviRcrcAOUacnHwQ", "isbns": "9781632168146"})
-
 user_id=""
 uid=0
 
@@ -34,7 +30,7 @@ uid=0
 def index():
     test = db.execute("SELECT * FROM books").fetchone()
     work = test['isbn']
-    return render_template("homepage.html", work=work, res=res.json())
+    return render_template("homepage.html", work=work)
 
 
 @app.route("/register")
@@ -61,16 +57,21 @@ def home():
     password = request.form.get("password")
     global user_id
     global uid
-    #uid = db.execute("SELECT id FROM users WHERE username='issabw'").fetchone()
-    userID = db.execute("SELECT id FROM users WHERE username=:username", {"username":username}).fetchone()
+    userID = db.execute("SELECT id FROM users WHERE username=:username",
+                        {"username":username}).fetchone()
     uid = userID
     user_id = username
-    test=uid[0]
     if db.execute("SELECT * FROM users WHERE username=:username AND password=:password",
                   {"username":username, "password":password}).rowcount == 0:
-        return render_template("error.html", message="Not a valid username/password combination.")
+        return render_template("error.html",
+                               message="Not a valid username/password combination.")
     else:
-        return render_template("home.html", username=username, password=password, uid=uid, test=test)
+        return render_template("home.html",
+                               username=username, password=password, uid=uid)
+
+@app.route("/mainpage", methods=["POST"])
+def mainpage():
+    return render_template("mainpage.html")
 
 @app.route("/search", methods=["POST"])
 def search():
@@ -88,7 +89,9 @@ def search():
 def bookpage(isbn):
     title = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn})
     reviews = db.execute("SELECT * FROM review WHERE isbn=:isbn", {"isbn":isbn})
-    return render_template("bookpage.html", isbn=isbn, title=title, reviews=reviews)
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                       params={"key": "wJMCIDlviRcrcAOUacnHwQ", "isbns": isbn})
+    return render_template("bookpage.html", isbn=isbn, title=title, reviews=reviews, res=res.json())
 
 @app.route("/search/<isbn>/review")
 def review(isbn):
@@ -125,21 +128,34 @@ def success(isbn):
         return render_template("successreview.html", isbn=isbn, review=review, uid=uid)
     else:
         #rating and review given
-
-        #***needs to be a check if user id has made a review to this isbn
-    
         db.execute("INSERT INTO review (isbn, rating, comments, id) VALUES (:isbn, :rating, :review, :userID)",
                        {"isbn": isbn, "rating": rating, "review":review, "userID":userID})
         db.commit()
         
         return render_template("successreview.html", isbn=isbn, review=review, rating=rating, rowcount=rowcount)
         
-        #return render_template("error.html", message="Already submitted a review for this book (1 allowed).")
-        
-    #should include some sort of message saying if stored and what has been stored.
     
+@app.route("/api/<isbn>", methods=["GET"])
+def json(isbn):
+    
+    if db.execute("SELECT isbn FROM books WHERE isbn=:isbn", {"isbn":isbn}).rowcount == 0:
+        return jsonify({"error": "Invalid isbn number"}), 404
+    else:
+        bookinfo = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn":isbn}).fetchone()
+        res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                       params={"key": "wJMCIDlviRcrcAOUacnHwQ", "isbns": isbn})
+        resjson = res.json()
+        return jsonify({
+            "title": bookinfo.title,
+            "author": bookinfo.author,
+            "year": bookinfo.year,
+            "isbn": bookinfo.isbn,
+            "review_count": resjson["books"][0]["reviews_count"],
+            "average_score": resjson["books"][0]["average_rating"]
+            })
 
-@app.route("/logout")
+
+@app.route("/logout", methods=["POST"])
 def logout():
     return render_template("logout.html")
 
